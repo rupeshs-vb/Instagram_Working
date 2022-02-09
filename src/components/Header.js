@@ -7,13 +7,10 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import SearchIcon from "@mui/icons-material/Search";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AddPost from "./AddPost";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [postModal, SetPostModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,14 +18,8 @@ const Header = () => {
     navigate("/login");
   };
 
-  const addNewPost = () => {
-    SetPostModal(true);
-  };
-
   return (
     <>
-      <AddPost postModal={postModal} SetPostModal={SetPostModal} />
-
       <Box sx={{ display: "flex", mt: 2 }}>
         <Box sx={{ margin: "0px 20px" }}>
           <Typography variant="h4">INSTAGRAM</Typography>
@@ -62,13 +53,6 @@ const Header = () => {
           onClick={handleLogut}
         >
           Logout
-        </Box>
-        <Box
-          sx={{ margin: "5px 20px" }}
-          style={{ cursor: "pointer" }}
-          onClick={addNewPost}
-        >
-          <AddCircleOutlineIcon />
         </Box>
       </Box>
     </>

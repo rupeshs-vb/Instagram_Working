@@ -1,4 +1,9 @@
 import React from "react";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Stack from "@mui/material/Stack";
 import {
   Backdrop,
   Box,
@@ -7,19 +12,25 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
+
 import CloseIcon from "@mui/icons-material/Close";
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "700px",
-  height: "600px",
+  width: "400px",
+  height: "300px",
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: "5px",
   p: 3,
 };
+
+const Input = styled("input")({
+  display: "none",
+});
+
 export default function BenchModal({ postModal, SetPostModal }) {
   const onCloseHandle = () => {
     SetPostModal(false);
@@ -58,19 +69,60 @@ export default function BenchModal({ postModal, SetPostModal }) {
                 m: 3,
               }}
             >
-              <Typography sx={{ m: 1 }}>Upload Post:</Typography>
-              <TextField size="small" placeholder="Upload Picture" />
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <label htmlFor="contained-button-file">
+                  <Input
+                    accept="image/*"
+                    id="contained-button-file"
+                    multiple
+                    type="file"
+                  />
+                  <Button variant="contained" component="span">
+                    Upload an Image
+                  </Button>
+                </label>
+                <label htmlFor="icon-button-file">
+                  <Input accept="image/*" id="icon-button-file" type="file" />
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="span"
+                  >
+                    <PhotoCamera />
+                  </IconButton>
+                </label>
+              </Stack>
             </Box>
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 textAlign: "center",
-                m: 3,
+                m: 2,
               }}
             >
-              <Typography sx={{ m: 1 }}>About:</Typography>
               <TextField placeholder="Add Caption" />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "left",
+                textAlign: "center",
+                m: 1,
+              }}
+            >
+              <Button
+                style={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  left: "110px",
+                  top: "180px",
+                }}
+                variant="contained"
+                color="primary"
+              >
+                Submit
+              </Button>
             </Box>
           </Box>
         </Fade>

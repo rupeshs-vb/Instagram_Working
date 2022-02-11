@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import Stack from "@mui/material/Stack";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewPost, getUserPost } from "../store/user-action";
+
 import {
   Backdrop,
   Box,
@@ -32,8 +32,56 @@ const Input = styled("input")({
 });
 
 export default function BenchModal({ postModal, SetPostModal }) {
+  const { user } = useSelector((state) => state.userDetails);
+  const dispatch = useDispatch();
+
+  const initialstate = {
+    postDetails: {
+      image: null,
+      AboutImage: "",
+      user: user.id || "--",
+    },
+  };
+  const [state, setState] = useState(initialstate);
+
+  const {
+    postDetails: { image, AboutImage },
+  } = state;
+
   const onCloseHandle = () => {
     SetPostModal(false);
+  };
+
+  const addPostDetails = (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("image", state.postDetails.image);
+    formData.append("user", state.postDetails.user);
+    formData.append("AboutImage", state.postDetails.AboutImage);
+
+    dispatch(addNewPost(formData)).then((res) => {
+      if (res) {
+        alert(res);
+        dispatch(getUserPost(user.id));
+      }
+    });
+    SetPostModal(false);
+  };
+
+  const handleEventValue = ({ target }) => {
+    setState({
+      ...state,
+      postDetails: {
+        ...state.postDetails,
+        [target.name]: target.value,
+      },
+    });
+  };
+
+  const handleEventImage = (event) => {
+    console.log(event.target.files[0]);
+    state.postDetails.image = event.target.files[0];
+    console.log(state);
   };
 
   return (
@@ -61,69 +109,92 @@ export default function BenchModal({ postModal, SetPostModal }) {
                 top: "5px",
               }}
             />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                textAlign: "center",
-                m: 3,
-              }}
-            >
-              <Stack direction="row" alignItems="center" spacing={2}>
-                <label htmlFor="contained-button-file">
-                  <Input
-                    accept="image/*"
-                    id="contained-button-file"
-                    multiple
-                    type="file"
-                  />
-                  <Button variant="contained" component="span">
-                    Upload an Image
-                  </Button>
-                </label>
-                <label htmlFor="icon-button-file">
-                  <Input accept="image/*" id="icon-button-file" type="file" />
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                  >
-                    <PhotoCamera />
-                  </IconButton>
-                </label>
-              </Stack>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                textAlign: "center",
-                m: 2,
-              }}
-            >
-              <TextField placeholder="Add Caption" />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "left",
-                textAlign: "center",
-                m: 1,
-              }}
-            >
-              <Button
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  left: "110px",
-                  top: "180px",
+            <form onSubmit={addPostDetails}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  m: 3,
                 }}
-                variant="contained"
-                color="primary"
               >
-                Submit
-              </Button>
-            </Box>
+                {/* <Stack direction="row" alignItems="center" spacing={2}>
+                  <label htmlFor="contained-button-file">
+                    <Input
+                      accept="image/*"
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                    />
+                    <Button variant="contained" component="span">
+                      Upload an Image
+                    </Button>
+                  </label>
+                  <label htmlFor="icon-button-file">
+                    <Input accept="image/*" id="icon-button-file" type="file" />
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <PhotoCamera />
+                    </IconButton>
+                  </label>
+                </Stack> */}
+                {/* <TextField
+                  type="file"
+                  name="image"
+                  value={image}
+                  accept="image/*"
+                  onChange={handleEventValue}
+                /> */}
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/png, image/jpeg"
+                  onChange={handleEventImage}
+                  required
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  m: 2,
+                }}
+              >
+                <TextField
+                  placeholder="Add Caption"
+                  name="AboutImage"
+                  value={AboutImage}
+                  onChange={handleEventValue}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "left",
+                  textAlign: "center",
+                  m: 1,
+                }}
+              >
+                <Button
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    left: "110px",
+                    top: "180px",
+                  }}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </Box>
+            </form>
           </Box>
         </Fade>
       </Modal>

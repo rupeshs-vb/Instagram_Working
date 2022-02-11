@@ -1,36 +1,58 @@
 import React, { useState } from "react";
 import { Container, Box, TextField, Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../store/user-action";
 
 const initialstate = {
   SignUpDetails: {
     name: "",
     username: "",
     email: "",
-    phoneno: "",
+    phoneNumber: "",
     password: "",
-    confirmpassword: "",
+    profileImage: null,
+    // confirmpassword: "",
   },
 };
 
 const SignUp = () => {
   const [state, setState] = useState(initialstate);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     SignUpDetails: {
       name,
       username,
       email,
-      phoneno,
+      phoneNumber,
       password,
-      confirmpassword,
+      profileImage,
+      // confirmpassword,
     },
   } = state;
 
   const signUpDetails = (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append("name", state.SignUpDetails.name);
+    formData.append("username", state.SignUpDetails.username);
+    formData.append("email", state.SignUpDetails.email);
+    formData.append("phoneNumber", state.SignUpDetails.phoneNumber);
+    formData.append("profileImage", state.SignUpDetails.profileImage);
+    formData.append("password", state.SignUpDetails.password);
+
+    console.log(formData, "-----------------------------");
+
+    dispatch(registerUser(formData)).then((res) => {
+      if (res) {
+        alert(res);
+        navigate("/login");
+      }
+    });
     console.log(state.SignUpDetails);
-    // setState(initialstate);
+    setState(initialstate);
   };
 
   const handleDetails = ({ target }) => {
@@ -41,6 +63,10 @@ const SignUp = () => {
         [target.name]: target.value,
       },
     });
+  };
+
+  const handleEventImage = (event) => {
+    state.SignUpDetails.profileImage = event.target.files[0];
   };
 
   return (
@@ -101,11 +127,11 @@ const SignUp = () => {
               margin="normal"
               required
               fullWidth
-              id="phoneno"
-              name="phoneno"
+              id="phoneNumber"
+              name="phoneNumber"
               variant="outlined"
               placeholder="Enter Contact No"
-              value={phoneno}
+              value={phoneNumber}
               onChange={handleDetails}
             />
             <TextField
@@ -120,7 +146,7 @@ const SignUp = () => {
               value={password}
               onChange={handleDetails}
             />
-            <TextField
+            {/* <TextField
               margin="normal"
               required
               fullWidth
@@ -130,6 +156,14 @@ const SignUp = () => {
               placeholder="Confirm Password"
               value={confirmpassword}
               onChange={handleDetails}
+            /> */}
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/png, image/jpeg"
+              onChange={handleEventImage}
+              required
             />
             <Button
               type="submit"

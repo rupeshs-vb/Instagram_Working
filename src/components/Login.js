@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Container, Box, TextField, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LoginUsers } from "../store/user-action";
 
 const initialstate = {
   loginDetails: {
@@ -11,6 +14,8 @@ const initialstate = {
 
 const Login = () => {
   const [state, setState] = useState(initialstate);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     loginDetails: { username, password },
@@ -19,7 +24,13 @@ const Login = () => {
   const LoginDetails = (event) => {
     event.preventDefault();
     console.log(state.loginDetails);
-    setState(initialstate);
+    dispatch(LoginUsers(state.loginDetails)).then((res) => {
+      if (res) {
+        navigate("/home");
+      } else {
+        alert("bad credentials");
+      }
+    });
   };
 
   const handleDetails = ({ target }) => {

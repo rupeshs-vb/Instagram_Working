@@ -4,6 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useNavigate } from "react-router-dom";
 import { SearchUser, SelectedUser } from "../store/user-action";
 import { useDispatch, useSelector } from "react-redux";
+const baseUrl = "http://127.0.0.1:8000";
 
 const Header = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -11,7 +12,6 @@ const Header = () => {
   const { searchUser } = useSelector((state) => state.userDetails);
   const [checkId, setCheckId] = useState(0);
   const { user } = useSelector((state) => state.userDetails);
-  const { selectedUser } = useSelector((state) => state.userDetails);
 
   const dispatch = useDispatch();
 
@@ -51,6 +51,8 @@ const Header = () => {
     }
     setSearchValue("");
   };
+
+  console.log(user, "--------------------");
 
   return (
     <>
@@ -95,24 +97,25 @@ const Header = () => {
               required
               id="username"
               name="username"
-              // value={
-              //   userAccount.employees ? userAccount.employees.empName : username
-              // }
               placeholder="search..."
             />
           )}
         />
 
         <Box
-          sx={{ margin: "5px 20px" }}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", marginTop: "-10px" }}
           onClick={handleUser}
         >
-          {user.username}
-          {/* <img src={} alt="" /> */}
+          <img
+            src={baseUrl + user.profileImage}
+            alt=""
+            width="40px"
+            height="40px"
+            style={{ borderRadius: "50%", margin: "0 5px" }}
+          />
         </Box>
         <Box
-          sx={{ margin: "5px 20px" }}
+          sx={{ margin: "-5px 20px" }}
           style={{ cursor: "pointer" }}
           onClick={handleLogut}
         >

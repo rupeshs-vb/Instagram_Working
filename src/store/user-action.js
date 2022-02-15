@@ -10,7 +10,8 @@ export const LoginUsers = (userDetail) => {
       if (response.status === 200) {
         const data = response.data.data;
         localStorage.setItem("username", data.username);
-        localStorage.setItem("password", data.password);
+        localStorage.setItem("password", userDetail.password);
+
         return data;
       } else if (response.data.code === 422) {
         response.data.message = "Invalid email or password";

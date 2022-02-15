@@ -16,17 +16,6 @@ import {
   ImageListItem,
 } from "@material-ui/core";
 
-// const testing = async () => {
-//   const
-//   const test = {
-//     username: "rupesh12321",
-//     password: "sasasas@123",
-//   };
-//   const data = await axios.post("http://127.0.0.1:8000/api/login/", test);
-//   console.log(data);
-// };
-
-// testing();
 const baseUrl = "http://127.0.0.1:8000";
 
 const Home = () => {

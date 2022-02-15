@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Backdrop,
   Box,
@@ -36,11 +36,15 @@ export default function BenchModal({
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userDetails);
   const { selectedUser } = useSelector((state) => state.userDetails);
-
+  console.log(imageData, "hello====");
   const [editpost, setEditPost] = useState(false);
-  const [editpostDetails, setEditPostDetails] = useState(
-    user.id === selectedUser.id ? imageData.AboutImage : ""
-  );
+  const [editpostDetails, setEditPostDetails] = useState("");
+  // if (Object.keys(imageData).length != 0) {
+  //   setEditPostDetails(imageData.AboutImage);
+  // }
+  useEffect(() => {
+    setEditPostDetails(imageData.AboutImage);
+  }, [imageData]);
 
   const onDeleteHandle = () => {
     dispatch(deletePost(imageData.id)).then((res) => {
@@ -54,6 +58,7 @@ export default function BenchModal({
 
   const onCloseHandle = () => {
     setModalDetails(false);
+    setEditPost(false);
   };
 
   const handleSave = () => {
@@ -66,6 +71,7 @@ export default function BenchModal({
       }
     });
     setModalDetails(false);
+    setEditPost(false);
   };
 
   return (

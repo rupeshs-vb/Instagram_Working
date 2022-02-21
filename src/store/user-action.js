@@ -9,9 +9,8 @@ export const LoginUsers = (userDetail) => {
       const response = await axios.post(`${baseUrl}/api/login/`, userDetail);
       if (response.status === 200) {
         const data = response.data.data;
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("password", userDetail.password);
-
+        localStorage.setItem("token", data.token);
+        axios.defaults.headers.common["Authorization"] = data.token;
         return data;
       } else if (response.data.code === 422) {
         response.data.message = "Invalid email or password";
@@ -244,6 +243,33 @@ export const AddFollower = (user_id, follo_data) => {
       const data = await fetchPost();
       return data;
     } catch (error) {
+      console.log(error.message);
+      return false;
+    }
+  };
+};
+export const validateToken = () => {
+  return async (dispatch) => {
+    const fetchData = async () => {
+      axios.defaults.headers.common["Authorization"] =
+        localStorage.getItem("token");
+      const response = await axios.get(`${baseUrl}/api/check/`);
+      if (response.status === 200) {
+        const data = response.data.data;
+        return data;
+      }
+      throw new Error(
+        response.data.message || "Something went wrong! Please try again..."
+      );
+    };
+
+    try {
+      const data = await fetchData();
+      dispatch(userAction.loginUser(data));
+      dispatch(userAction.getSelectedUser(data));
+      return true;
+    } catch (error) {
+      console.log("hello");
       console.log(error.message);
       return false;
     }

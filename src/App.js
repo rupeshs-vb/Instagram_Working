@@ -4,19 +4,25 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Home from "./components/Home";
 import { useDispatch } from "react-redux";
-import { LoginUsers } from "./store/user-action";
+import { validateToken } from "./store/user-action";
 // import { Redirect } from "react-router";
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-    const tempObject = { username: username, password: password };
-    dispatch(LoginUsers(tempObject)).then((res) => {
-      res ? navigate("/home") : navigate("/login");
-    });
+    if (localStorage.getItem("token")) {
+      dispatch(validateToken()).then((res) => {
+        if (res) {
+          navigate("/home");
+        } else {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      });
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   return (
